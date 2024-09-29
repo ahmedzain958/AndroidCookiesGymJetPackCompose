@@ -31,21 +31,32 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 
 @Composable
 fun GymsScreen() {
     val viewModel: GymsViewModel = viewModel()
+
     LazyColumn() {
-        items(viewModel.getGyms()) { gym ->
-            GymItem(gym)
+        items(viewModel.state) { gym ->
+            GymItem(gym) { gymId ->
+                viewModel.toggleFavState(gymId)
+            }
         }
     }
 }
 
 @Composable
-fun GymItem(gym: Gym) {
+fun GymItem(gym: Gym,
+            onClick: (Int) -> Unit
+) {
+    val icon = if (gym.isFavorite) {
+        Icons.Filled.Favorite
+    } else {
+        Icons.Filled.FavoriteBorder
+    }
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
@@ -55,33 +66,31 @@ fun GymItem(gym: Gym) {
 
         ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-            GymIcon(Icons.Filled.Place, Modifier.weight(0.15f))
+            DefaultIcon(Icons.Filled.Place, Modifier.weight(0.15f), "Location Icon")
             GymDetails(gym, Modifier.weight(0.70f))
-            FavoriteIcon(Modifier.weight(0.15f))
+            DefaultIcon(icon, Modifier.weight(0.15f), "Favorite Gym Icon") {
+                onClick(gym.id)
+            }
         }
     }
 }
 
 @Composable
-fun FavoriteIcon(modifier: Modifier) {
-    var isFavoriteState by remember {
-        mutableStateOf(false)
-    }
-    val icon = if (isFavoriteState) {
-        Icons.Filled.Favorite
-    } else {
-        Icons.Filled.FavoriteBorder
-    }
+fun DefaultIcon(
+    icon: ImageVector,
+    modifier: Modifier,
+    contentDescription: String,
+    onClick: () -> Unit = {},
+) {
     Image(
         imageVector = icon,
-        contentDescription = "Favorite Gym Icon",
+        contentDescription = contentDescription,
         modifier = modifier
             .padding(8.dp)
             .clickable {
-                isFavoriteState = !isFavoriteState
-
+                onClick()
             },
-        colorFilter = ColorFilter.tint(Color.Red),
+        colorFilter = ColorFilter.tint(Color.DarkGray),
     )
 }
 
@@ -106,25 +115,3 @@ fun GymDetails(gym: Gym, modifier: Modifier) {
     }
 }
 
-@Composable
-fun GymIcon(vector: ImageVector, modifier: Modifier) {
-    Image(
-        imageVector = vector,
-        contentDescription = "Gym icon",
-        modifier = modifier,
-        colorFilter = ColorFilter.tint(Color.DarkGray)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewGymsScreen() {
-    AndroidCookiesComposeTheme {
-        val viewModel: GymsViewModel = viewModel()
-        LazyColumn() {
-            items(viewModel.getGyms()) { gym ->
-                GymItem(gym)
-            }
-        }
-    }
-}
