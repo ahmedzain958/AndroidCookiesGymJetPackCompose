@@ -28,6 +28,7 @@ import com.zainco.androidcookiescompose.ui.theme.Purple80
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +39,9 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 @Composable
 fun GymsScreen() {
     val viewModel: GymsViewModel = viewModel()
-
+    /*LaunchedEffect(key1 = "load_gyms") {
+    viewModel.getGyms()
+    }*/
     LazyColumn() {
         items(viewModel.state) { gym ->
             GymItem(gym) { gymId ->
