@@ -52,8 +52,9 @@ fun GymsScreen() {
 }
 
 @Composable
-fun GymItem(gym: Gym,
-            onClick: (Int) -> Unit
+fun GymItem(
+    gym: Gym,
+    onClick: (Int) -> Unit
 ) {
     val icon = if (gym.isFavorite) {
         Icons.Filled.Favorite
@@ -98,8 +99,11 @@ fun DefaultIcon(
 }
 
 @Composable
-fun GymDetails(gym: Gym, modifier: Modifier) {
-    Column(modifier) {
+fun GymDetails(
+    gym: Gym, modifier: Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start
+) {
+    Column(modifier, horizontalAlignment = horizontalAlignment) {
         Text(
             text = "UpTown Gym",
             style = MaterialTheme.typography.titleSmall,
