@@ -65,7 +65,6 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        job.cancel()
     }
 
     companion object {
