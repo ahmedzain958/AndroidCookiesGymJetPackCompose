@@ -6,9 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -19,6 +18,9 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     mutableStateOf(emptyList<Gym>())
 
     private var apiService: GymsApiService
+    private var coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        throwable.printStackTrace()
+    }
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -29,13 +31,15 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     private fun getGyms() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val gyms = apiService.getGyms()
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val gyms = getGymsFromRemote()
             withContext(Dispatchers.Main) {
                 state = gyms.restoreGymsAndTheSelected()
             }
         }
     }
+
+    private suspend fun getGymsFromRemote() = withContext(Dispatchers.IO){apiService.getGyms()}
 
     fun toggleFavState(gymId: Int) {
         val gyms = state.toMutableList()
