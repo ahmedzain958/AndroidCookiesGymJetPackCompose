@@ -29,7 +29,7 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     private fun getGyms() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val gyms = apiService.getGyms()
             withContext(Dispatchers.Main) {
                 state = gyms.restoreGymsAndTheSelected()
