@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.zainco.androidcookiescompose.ui.theme.AndroidCookiesComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +23,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 private fun GymsAroundApp() {
     val navController = rememberNavController()
@@ -31,7 +33,17 @@ private fun GymsAroundApp() {
             }
         }
 
-        composable(route = "gyms/{gym_id}") {
+        composable(
+            route = "gyms/{gym_id}", arguments = listOf(
+                navArgument("gym_id") {
+                    type = NavType.IntType
+                }), deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "https://www.gymsaround.com/details/{gym_id}"
+
+                }
+            )
+        ) { it: androidx.navigation.NavBackStackEntry ->
             GymDetailsScreen()
         }
     }
