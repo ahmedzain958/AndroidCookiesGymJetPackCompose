@@ -1,0 +1,118 @@
+{
+  "gyms": [
+    {
+      "id": 0,
+      "gym_name": "UpTown Gym",
+      "gym_location": "20 El-Gihad, Mit Akaba, Agouza, Giza Governorate 3754204, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 1,
+      "gym_name": "Gold's Gym",
+      "gym_location": "61 Syria, Mit Akaba, Agouza, Giza Governorate 3752302, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 2,
+      "gym_name": "Hammer Gym",
+      "gym_location": "7 Sphinx Square, Al Huwaiteyah, Agouza, Giza Governorate 3753612, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 3,
+      "gym_name": "I-Enenrgy Gym",
+      "gym_location": "22 Gool Gamal, Al Huwaiteyah, Agouza, Giza Governorate 3753620, Egypt",
+      "is_open": false
+    },
+    {
+      "id": 4,
+      "gym_name": "H2o Gym & Spa",
+      "gym_location": "32 Anas Ibn Malek, Mit Akaba, Agouza, Giza Governorate 3752212, Egypt",
+      "is_open": false
+    },
+    {
+      "id": 5,
+      "gym_name": "LVFit EMS Egypt",
+      "gym_location": "31 Gameat Al Dewal Al Arabeya, Gazirat Mit Oqbah, Agouza, Giza Governorate 3752240, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 6,
+      "gym_name": "World Gym Dokki",
+      "gym_location": "Mohamed، Mohammed Saleh Ln, Ad Doqi, Dokki, Giza Governorate 3751222, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 7,
+      "gym_name": "Fitness Reps Gym",
+      "gym_location": "3 Dr Michel Bakhoum, Ad Doqi, Dokki, Giza Governorate 3751320, Egypt",
+      "is_open": false
+    },
+    {
+      "id": 8,
+      "gym_name": "Snap Fitness",
+      "gym_location": "352W+V33, Al Giza, Al Mohandessen, Agouza, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 9,
+      "gym_name": "True Gym",
+      "gym_location": "6 Abd El-Aziz Selim, Ad Doqi, Dokki, Giza Governorate 3751320, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 10,
+      "gym_name": "Bulky Gym mohandseen",
+      "gym_location": "395 Sudan St, Madinet Al Eelam, Agouza, Giza Governorate 3755105, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 11,
+      "gym_name": "The Club Gym",
+      "gym_location": "9 Soliman Abaza, Ad Doqi, Dokki, Giza Governorate 12311, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 12,
+      "gym_name": "Castello Fitness Gym",
+      "gym_location": "14 Mohammed Mahmoud Shaaban, st، Dokki, Giza Governorate 3751410, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 13,
+      "gym_name": "My Gym",
+      "gym_location": "77 El-Ansar, Ad Doqi, Dokki, Giza Governorate 3751060, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 14,
+      "gym_name": "Engine38 Downtown",
+      "gym_location": "32 Nadi Al Saeed, Ad Doqi, Dokki, Giza Governorate 3751212, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 15,
+      "gym_name": "CLASH GYM & fitness club",
+      "gym_location": "El-Alafty st, Al Moatamadeyah, Agouza, Cairo Governorate 3743260, Egypt",
+      "is_open": true
+    },
+    {
+      "id": 16,
+      "gym_name": "Fitness Time Gym & Spa",
+      "gym_location": "17-2 Atet Abosree-Abou Naser Sabekn, Mit Akaba, Agouza, Giza Governorate 3754510, Egypt",
+      "is_open": false
+    },
+    {
+      "id": 17,
+      "gym_name": "Lion Heart Gym",
+      "gym_location": "24 Al Taef, Ad Doqi, Dokki, Giza Governorate 3751052, Egypt",
+      "is_open": false
+    },
+    {
+      "id": 18,
+      "gym_name": "Wave Fit - EMS Egypt",
+      "gym_location": "18 Gool Gamal, Al Huwaiteyah, Agouza, Giza Governorate 3753620, Egypt",
+      "is_open": true
+    }
+  ]
+}

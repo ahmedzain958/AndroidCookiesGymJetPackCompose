@@ -21,8 +21,11 @@ class GymsDetailsViewModel: ViewModel() {
     }
 
     private fun getGym(id: Int) {
-        viewModelScope.launch {
-            val gym = getGymFromRemoteDB(id)
+        viewModelScope.launch(Dispatchers.IO) {
+            val gym: Map<String, Gym> = getGymFromRemoteDB(id)
+            withContext(Dispatchers.Main) {
+                state.value = gym.values.first()
+            }
         }
     }
 
