@@ -16,4 +16,10 @@ interface GymsDao {
 
     @Update(entity = Gym::class)
     suspend fun update(gymFavouriteState: GymFavouriteState)
+
+    @Query("SELECT * FROM gyms WHERE is_favorite = 1")
+    suspend fun getFavouriteGyms(): List<Gym>
+
+    @Update(entity = Gym::class)
+    suspend fun updateAll(gymFavouriteStates: List<GymFavouriteState>)
 }
