@@ -15,8 +15,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     var state by  mutableStateOf(emptyList<Gym>())
-
     private var apiService: GymsApiService
+
+    private val gymDao = GymsDatabase.getDaoInstance(GymsApplication.getAppContext())
+
     private var coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
     }
@@ -38,7 +40,11 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    private suspend fun getGymsFromRemote() = withContext(Dispatchers.IO){apiService.getGyms()}
+    private suspend fun getGymsFromRemote() = withContext(Dispatchers.IO){
+        val gyms =apiService.getGyms()
+        gymDao.addAll(gyms)
+        return@withContext gyms
+    }
 
     fun toggleFavState(gymId: Int) {
         val gyms = state.toMutableList()
