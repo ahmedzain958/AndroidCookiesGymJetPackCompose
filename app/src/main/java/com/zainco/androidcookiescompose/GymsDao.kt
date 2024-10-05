@@ -1,16 +1,19 @@
 package com.zainco.androidcookiescompose
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface GymsDao {
     @Query("SELECT * FROM gyms")
-    fun getAll(): List<Gym>
+    suspend fun getAll(): List<Gym>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addAll(gyms: List<Gym>)
+    suspend fun addAll(gyms: List<Gym>)
+
+    @Update(entity = Gym::class)
+    suspend fun update(gymFavouriteState: GymFavouriteState)
 }

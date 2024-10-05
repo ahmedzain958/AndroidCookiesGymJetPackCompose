@@ -14,7 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
-    var state by  mutableStateOf(emptyList<Gym>())
+    var state by mutableStateOf(emptyList<Gym>())
     private var apiService: GymsApiService
 
     private val gymDao = GymsDatabase.getDaoInstance(GymsApplication.getAppContext())
@@ -40,10 +40,14 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    private suspend fun getGymsFromRemote() = withContext(Dispatchers.IO){
-        val gyms =apiService.getGyms()
-        gymDao.addAll(gyms)
-        return@withContext gyms
+    private suspend fun getGymsFromRemote() = withContext(Dispatchers.IO) {
+        try {
+            val gyms = apiService.getGyms()
+            gymDao.addAll(gyms)
+            gyms
+        } catch (e: Exception) {
+            gymDao.getAll()
+        }
     }
 
     fun toggleFavState(gymId: Int) {
@@ -54,11 +58,14 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
         state = gyms
     }
 
-    fun List<Gym>.restoreGymsAndTheSelected(): List<Gym> {
+    private fun List<Gym>.restoreGymsAndTheSelected(): List<Gym> {
         stateHandle.get<List<Int>>(FAV_IDS)?.let { savedIds ->
+            val gymsMap = this.associateBy(Gym::id).toMutableMap()
             savedIds.forEach { gymId ->
-                this.find { it.id == gymId }?.isFavorite = true
+                val gym = gymsMap[gymId] ?: return@forEach
+                gymsMap[gymId] = gym.copy(isFavorite = true)
             }
+            return gymsMap.values.toList()
         }
         return this
     }
