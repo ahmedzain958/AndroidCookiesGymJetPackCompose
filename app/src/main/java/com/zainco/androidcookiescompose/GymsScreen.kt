@@ -34,14 +34,13 @@ import com.zainco.androidcookiescompose.ui.theme.Purple80
 @Composable
 fun GymsScreen(onItemClick: (Int) -> Unit) {
     val viewModel: GymsViewModel = viewModel()
-    val gyms = viewModel.state
-    val dataIsLoading = gyms.isEmpty()
+    val state = viewModel.state
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
         LazyColumn() {
-            items(viewModel.state) { gym ->
+            items(state.gymsList) { gym ->
                 GymItem(gym, onFavouriteIconClick = {
                     viewModel.toggleFavState(gym.id)
                 }) { id ->
@@ -49,9 +48,11 @@ fun GymsScreen(onItemClick: (Int) -> Unit) {
                 }
             }
         }
-        if (dataIsLoading)
+        if (state.isLoading)
             CircularProgressIndicator()
-
+        state.error?.let {
+            Text(it)
+        }
     }
 
 }

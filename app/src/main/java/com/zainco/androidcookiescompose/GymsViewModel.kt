@@ -3,7 +3,6 @@ package com.zainco.androidcookiescompose
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -14,13 +13,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class GymsViewModel() : ViewModel() {
-    var state by mutableStateOf(emptyList<Gym>())
+    var state by mutableStateOf(GymScreenState(emptyList(), true))
+
     private var apiService: GymsApiService
 
     private val gymDao = GymsDatabase.getDaoInstance(GymsApplication.getAppContext())
 
     private var coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
+        state = state.copy(error = throwable.message, isLoading = false)
     }
 
     init {
@@ -33,7 +34,8 @@ class GymsViewModel() : ViewModel() {
 
     private fun getGyms() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            state = getGymsFromRemote()
+            val receivedGyms = getGymsFromRemote()
+            state = state.copy(gymsList = receivedGyms, isLoading = false)
         }
     }
 
@@ -55,11 +57,11 @@ class GymsViewModel() : ViewModel() {
     }
 
     fun toggleFavState(gymId: Int) {
-        val gyms = state.toMutableList()
+        val gyms = state.gymsList.toMutableList()
         val itemIndex = gyms.indexOfFirst { it.id == gymId }
         viewModelScope.launch {
             val updatedGymsList = toggleFavouriteGym(gymId, !gyms[itemIndex].isFavorite)
-            state = updatedGymsList
+            state = state.copy(gymsList = updatedGymsList)
         }
     }
 
