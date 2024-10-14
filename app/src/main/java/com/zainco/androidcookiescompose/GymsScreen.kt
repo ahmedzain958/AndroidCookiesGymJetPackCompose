@@ -2,8 +2,10 @@ package com.zainco.androidcookiescompose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -31,18 +34,26 @@ import com.zainco.androidcookiescompose.ui.theme.Purple80
 @Composable
 fun GymsScreen(onItemClick: (Int) -> Unit) {
     val viewModel: GymsViewModel = viewModel()
-    /*LaunchedEffect(key1 = "load_gyms") {
-    viewModel.getGyms()
-    }*/
-    LazyColumn() {
-        items(viewModel.state) { gym ->
-            GymItem(gym, onFavouriteIconClick = {
-                viewModel.toggleFavState(gym.id)
-            }) { id ->
-                onItemClick(id)
+    val gyms = viewModel.state
+    val dataIsLoading = gyms.isEmpty()
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        LazyColumn() {
+            items(viewModel.state) { gym ->
+                GymItem(gym, onFavouriteIconClick = {
+                    viewModel.toggleFavState(gym.id)
+                }) { id ->
+                    onItemClick(id)
+                }
             }
         }
+        if (dataIsLoading)
+            CircularProgressIndicator()
+
     }
+
 }
 
 @Composable
