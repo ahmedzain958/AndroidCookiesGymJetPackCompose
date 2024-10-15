@@ -34,7 +34,7 @@ import com.zainco.androidcookiescompose.ui.theme.Purple80
 @Composable
 fun GymsScreen(onItemClick: (Int) -> Unit) {
     val viewModel: GymsViewModel = viewModel()
-    val state = viewModel.state
+    val state = viewModel.state.value
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxWidth()
