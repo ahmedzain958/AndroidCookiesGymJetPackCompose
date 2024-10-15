@@ -13,9 +13,9 @@ class GymsRepository {
 
     private val gymDao = GymsDatabase.getDaoInstance(GymsApplication.getAppContext())
 
-    suspend fun toggleFavouriteGym(gymId: Int, currentFavouriteState: Boolean) =
+    suspend fun toggleFavouriteGym(gymId: Int, favouriteState: Boolean) =
         withContext(Dispatchers.IO) {
-            gymDao.update(GymFavouriteState(gymId, currentFavouriteState))
+            gymDao.update(GymFavouriteState(gymId, favouriteState))
             return@withContext gymDao.getAll()
         }
 
