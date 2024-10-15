@@ -15,7 +15,7 @@ class GymsViewModel() : ViewModel() {
     val state: State<GymScreenState>
         get() = derivedStateOf { _state }
 
-    private val getAllGymsUseCase = GetAllGymsUseCase()
+    private val getInitialGymsUseCase = GetInitialGymsUseCase()
     private val toggleFavouriteStateUseCase = ToggleFavouriteStateUseCase()
 
     private var coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -29,7 +29,7 @@ class GymsViewModel() : ViewModel() {
 
     private fun getGyms() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val receivedGyms = getAllGymsUseCase()
+            val receivedGyms = getInitialGymsUseCase()
             _state = _state.copy(gymsList = receivedGyms, isLoading = false)
         }
     }

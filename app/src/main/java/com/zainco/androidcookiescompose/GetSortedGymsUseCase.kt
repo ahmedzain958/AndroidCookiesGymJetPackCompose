@@ -1,10 +1,10 @@
 package com.zainco.androidcookiescompose
 
-class GetAllGymsUseCase {
+class GetSortedGymsUseCase {
     private val gymsRepository = GymsRepository()
 
     suspend operator fun invoke(): List<Gym> {
-        return gymsRepository.getGymsFromRemote().sortedBy {
+        return gymsRepository.getGyms().sortedBy {
             it.name
         }
     }

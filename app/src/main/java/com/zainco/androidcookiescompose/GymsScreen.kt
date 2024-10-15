@@ -113,7 +113,7 @@ fun GymDetails(
 ) {
     Column(modifier, horizontalAlignment = horizontalAlignment) {
         Text(
-            text = "UpTown Gym",
+            text = gym.name,
             style = MaterialTheme.typography.titleSmall,
             color = Purple80
         )

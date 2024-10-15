@@ -9,7 +9,7 @@ class GymsRepository {
     private var apiService = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl("https://projectname-5ee14.firebaseio.com/").build()
-    .create(GymsApiService::class.java)
+        .create(GymsApiService::class.java)
 
     private val gymDao = GymsDatabase.getDaoInstance(GymsApplication.getAppContext())
 
@@ -19,13 +19,19 @@ class GymsRepository {
             return@withContext gymDao.getAll()
         }
 
+    suspend fun getGyms() =
+        withContext(Dispatchers.IO) {
+            return@withContext gymDao.getAll()
+        }
+
     private suspend fun updateLocalDatabase() {
         val gyms = apiService.getGyms()
         val favouriteGymsList = gymDao.getFavouriteGyms()
         gymDao.addAll(gyms)
         gymDao.updateAll(favouriteGymsList.map { GymFavouriteState(it.id, true) })
     }
-    suspend fun getGymsFromRemote() = withContext(Dispatchers.IO) {
+
+    suspend fun loadGyms() = withContext(Dispatchers.IO) {
         try {
             updateLocalDatabase()
         } catch (e: Exception) {
