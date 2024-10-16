@@ -1,4 +1,6 @@
-package com.zainco.androidcookiescompose
+package com.zainco.androidcookiescompose.gyms.domain
+
+import com.zainco.androidcookiescompose.gyms.data.GymsRepository
 
 class ToggleFavouriteStateUseCase {
     private val gymsRepository = GymsRepository()

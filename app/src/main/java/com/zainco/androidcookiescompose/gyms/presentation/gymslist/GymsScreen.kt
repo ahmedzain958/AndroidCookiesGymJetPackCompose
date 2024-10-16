@@ -1,4 +1,4 @@
-package com.zainco.androidcookiescompose
+package com.zainco.androidcookiescompose.gyms.presentation.gymslist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,27 +29,28 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.zainco.androidcookiescompose.gyms.domain.Gym
 import com.zainco.androidcookiescompose.ui.theme.Purple80
 
 @Composable
-fun GymsScreen(onItemClick: (Int) -> Unit) {
-    val viewModel: GymsViewModel = viewModel()
-    val state = viewModel.state.value
+fun GymsScreen(
+    state: GymScreenState,
+    onItemClick: (Int) -> Unit,
+    onFavouriteIconClick: (Int, Boolean) -> Unit
+) {
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxWidth()
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()
     ) {
         LazyColumn() {
             items(state.gymsList) { gym ->
-                GymItem(gym, onFavouriteIconClick = {
-                    viewModel.toggleFavState(gym.id)
+                GymItem(gym, onFavouriteIconClick = { id: Int, oldValue: Boolean ->
+                    onFavouriteIconClick.invoke(id, oldValue)
                 }) { id ->
                     onItemClick(id)
                 }
             }
         }
-        if (state.isLoading)
-            CircularProgressIndicator()
+        if (state.isLoading) CircularProgressIndicator()
         state.error?.let {
             Text(it)
         }
@@ -60,7 +61,7 @@ fun GymsScreen(onItemClick: (Int) -> Unit) {
 @Composable
 fun GymItem(
     gym: Gym,
-    onFavouriteIconClick: (Int) -> Unit,
+    onFavouriteIconClick: (Int, Boolean) -> Unit,
     onItemClick: (Int) -> Unit,
 ) {
     val icon = if (gym.isFavorite) {
@@ -81,7 +82,7 @@ fun GymItem(
             DefaultIcon(Icons.Filled.Place, Modifier.weight(0.15f), "Location Icon")
             GymDetails(gym, Modifier.weight(0.70f))
             DefaultIcon(icon, Modifier.weight(0.15f), "Favorite Gym Icon") {
-                onFavouriteIconClick(gym.id)
+                onFavouriteIconClick(gym.id, gym.isFavorite)
             }
         }
     }
@@ -113,17 +114,13 @@ fun GymDetails(
 ) {
     Column(modifier, horizontalAlignment = horizontalAlignment) {
         Text(
-            text = gym.name,
-            style = MaterialTheme.typography.titleSmall,
-            color = Purple80
+            text = gym.name, style = MaterialTheme.typography.titleSmall, color = Purple80
         )
         CompositionLocalProvider(
             LocalContentColor provides MaterialTheme.colorScheme.secondaryContainer
         ) {
             Text(
-                text = gym.place,
-                style = MaterialTheme.typography.bodySmall,
-                color = DarkGray
+                text = gym.place, style = MaterialTheme.typography.bodySmall, color = DarkGray
             )
         }
 

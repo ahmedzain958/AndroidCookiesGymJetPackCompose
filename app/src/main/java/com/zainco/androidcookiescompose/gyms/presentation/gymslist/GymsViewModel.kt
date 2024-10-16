@@ -1,4 +1,4 @@
-package com.zainco.androidcookiescompose
+package com.zainco.androidcookiescompose.gyms.presentation.gymslist
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zainco.androidcookiescompose.gyms.domain.GetInitialGymsUseCase
+import com.zainco.androidcookiescompose.gyms.domain.ToggleFavouriteStateUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
@@ -35,11 +37,9 @@ class GymsViewModel() : ViewModel() {
     }
 
 
-    fun toggleFavState(gymId: Int) {
-        val gyms = _state.gymsList.toMutableList()
-        val itemIndex = gyms.indexOfFirst { it.id == gymId }
+    fun toggleFavState(gymId: Int, oldValue: Boolean) {
         viewModelScope.launch {
-            val updatedGymsList = toggleFavouriteStateUseCase(gymId, gyms[itemIndex].isFavorite)
+            val updatedGymsList = toggleFavouriteStateUseCase(gymId, oldValue)
             _state = _state.copy(gymsList = updatedGymsList)
         }
     }

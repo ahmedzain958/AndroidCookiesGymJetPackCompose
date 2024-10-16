@@ -1,7 +1,6 @@
-package com.zainco.androidcookiescompose
+package com.zainco.androidcookiescompose.gyms.presentation.details
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -14,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.zainco.androidcookiescompose.gyms.presentation.gymslist.DefaultIcon
+import com.zainco.androidcookiescompose.gyms.presentation.gymslist.GymDetails
 
 @Preview
 @Composable
