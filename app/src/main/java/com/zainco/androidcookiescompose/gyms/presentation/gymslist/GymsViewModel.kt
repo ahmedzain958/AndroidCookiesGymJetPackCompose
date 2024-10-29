@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zainco.androidcookiescompose.gyms.domain.GetInitialGymsUseCase
-import com.zainco.androidcookiescompose.gyms.domain.ToggleFavouriteStateUseCase
+import com.zainco.androidcookiescompose.gyms.domain.usecases.GetInitialGymsUseCase
+import com.zainco.androidcookiescompose.gyms.domain.usecases.ToggleFavouriteStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch

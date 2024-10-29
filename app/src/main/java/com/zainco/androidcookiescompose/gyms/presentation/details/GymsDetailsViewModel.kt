@@ -6,13 +6,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zainco.androidcookiescompose.gyms.data.remote.GymsApiService
 import com.zainco.androidcookiescompose.gyms.domain.Gym
+import com.zainco.androidcookiescompose.gyms.domain.usecases.GetGymsByIdUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class GymsDetailsViewModel(val savedStateHandle: SavedStateHandle) : ViewModel() {
+@HiltViewModel
+class GymsDetailsViewModel @Inject constructor(
+    val savedStateHandle: SavedStateHandle,
+    private val getGymsByIdUseCase: GetGymsByIdUseCase,
+) : ViewModel() {
     val state = mutableStateOf<Gym?>(null)
     private var apiService: GymsApiService
 
@@ -35,7 +42,7 @@ class GymsDetailsViewModel(val savedStateHandle: SavedStateHandle) : ViewModel()
     }
 
     private suspend fun getGymFromRemoteDB(id: Int) = withContext(Dispatchers.IO) {
-        apiService.getGymById(id).values.first().let {
+        getGymsByIdUseCase(id).values.first().let {
             Gym(
                 it.id, it.name, it.place, it.isOpen
             )

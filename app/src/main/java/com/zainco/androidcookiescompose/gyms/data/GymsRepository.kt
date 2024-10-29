@@ -1,23 +1,20 @@
 package com.zainco.androidcookiescompose.gyms.data
 
-import com.zainco.androidcookiescompose.GymsApplication
-import com.zainco.androidcookiescompose.gyms.data.local.GymsDatabase
+import com.zainco.androidcookiescompose.gyms.data.local.GymsDao
 import com.zainco.androidcookiescompose.gyms.data.local.LocalGym
 import com.zainco.androidcookiescompose.gyms.data.local.LocalGymFavouriteState
 import com.zainco.androidcookiescompose.gyms.data.remote.GymsApiService
 import com.zainco.androidcookiescompose.gyms.domain.Gym
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class GymsRepository {
-    private var apiService = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("https://projectname-5ee14.firebaseio.com/").build()
-        .create(GymsApiService::class.java)
-
-    private val gymDao = GymsDatabase.getDaoInstance(GymsApplication.getAppContext())
+@Singleton
+class GymsRepository @Inject constructor(
+    private val apiService: GymsApiService,
+    private val gymDao: GymsDao,
+) {
 
     suspend fun toggleFavouriteGym(gymId: Int, favouriteState: Boolean) =
         withContext(Dispatchers.IO) {
@@ -49,6 +46,10 @@ class GymsRepository {
                 throw Exception("Something went wrong. try connecting to internet")
         }
         gymDao.getAll()
+    }
+
+    suspend fun getGymById(id: Int) = withContext(Dispatchers.IO) {
+        apiService.getGymById(id)
     }
 
 }
