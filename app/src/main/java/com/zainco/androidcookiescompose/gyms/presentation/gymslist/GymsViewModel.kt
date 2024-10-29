@@ -9,16 +9,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zainco.androidcookiescompose.gyms.domain.GetInitialGymsUseCase
 import com.zainco.androidcookiescompose.gyms.domain.ToggleFavouriteStateUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GymsViewModel() : ViewModel() {
+@HiltViewModel
+class GymsViewModel @Inject constructor(
+    private val getInitialGymsUseCase: GetInitialGymsUseCase,
+    private val toggleFavouriteStateUseCase: ToggleFavouriteStateUseCase,
+) : ViewModel() {
     private var _state by mutableStateOf(GymScreenState(emptyList(), true))
     val state: State<GymScreenState>
         get() = derivedStateOf { _state }
 
-    private val getInitialGymsUseCase = GetInitialGymsUseCase()
-    private val toggleFavouriteStateUseCase = ToggleFavouriteStateUseCase()
 
     private var coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()

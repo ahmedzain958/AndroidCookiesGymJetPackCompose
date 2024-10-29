@@ -3,7 +3,9 @@ package com.zainco.androidcookiescompose.gyms.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -14,8 +16,11 @@ import androidx.navigation.navDeepLink
 import com.zainco.androidcookiescompose.gyms.presentation.details.GymDetailsScreen
 import com.zainco.androidcookiescompose.gyms.presentation.gymslist.GymsScreen
 import com.zainco.androidcookiescompose.gyms.presentation.gymslist.GymsViewModel
+import com.zainco.androidcookiescompose.gyms.presentation.gymslist.PreviewDropDown
 import com.zainco.androidcookiescompose.ui.theme.AndroidCookiesComposeTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +37,16 @@ private fun GymsAroundApp() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "gyms") {
         composable(route = "gyms") {
-            val vm: GymsViewModel = viewModel()
-            GymsScreen(vm.state.value, { id ->
-                navController.navigate("gyms/$id")
-            }, onFavouriteIconClick = { id: Int, oldValue: Boolean ->
-                vm.toggleFavState(id, oldValue)
-            })
+            val vm: GymsViewModel = hiltViewModel()
+            Column {
+                PreviewDropDown()
+                GymsScreen(vm.state.value, { id ->
+                    navController.navigate("gyms/$id")
+                }, onFavouriteIconClick = { id: Int, oldValue: Boolean ->
+                    vm.toggleFavState(id, oldValue)
+                })
+            }
+
         }
 
         composable(

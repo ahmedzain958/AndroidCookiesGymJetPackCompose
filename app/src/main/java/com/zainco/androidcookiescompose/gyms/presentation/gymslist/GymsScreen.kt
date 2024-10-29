@@ -15,20 +15,30 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zainco.androidcookiescompose.gyms.domain.Gym
 import com.zainco.androidcookiescompose.ui.theme.Purple80
 
@@ -36,7 +46,7 @@ import com.zainco.androidcookiescompose.ui.theme.Purple80
 fun GymsScreen(
     state: GymScreenState,
     onItemClick: (Int) -> Unit,
-    onFavouriteIconClick: (Int, Boolean) -> Unit
+    onFavouriteIconClick: (Int, Boolean) -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()
@@ -126,4 +136,63 @@ fun GymDetails(
 
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun PreviewDropDown() {
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
+    var gender by remember {
+        mutableStateOf("")
+    }
+
+    Box(modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center) {
+        ExposedDropdownMenuBox(
+            expanded = isExpanded,
+            onExpandedChange = { isExpanded = !isExpanded }) {
+            TextField(
+                value = gender,
+                onValueChange = {
+                    gender = it
+                },
+                readOnly = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier.menuAnchor()
+            )
+            ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = {}) {
+                DropdownMenuItem(text = {
+                    Text(text = "")
+                }, onClick = {
+                    gender = ""
+                    isExpanded = false
+                })
+                DropdownMenuItem(text = {
+                    Text(text = "Male")
+                }, onClick = {
+                    gender = "Male"
+                    isExpanded = false
+                })
+                DropdownMenuItem(text = {
+                    Text(text = "Female")
+                }, onClick = {
+                    gender = "Female"
+                    isExpanded = false
+                })
+                DropdownMenuItem(text = {
+                    Text(text = "Other")
+                }, onClick = {
+                    gender = "Other"
+                    isExpanded = false
+                })
+            }
+        }
+    }
+}
+
 
