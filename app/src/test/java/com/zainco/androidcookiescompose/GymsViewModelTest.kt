@@ -32,7 +32,7 @@ class GymsViewModelTest {
     }
 
     private fun getViewModel(): GymsViewModel {
-        val gymsRepository = GymsRepository(TestGymsApiService(), TestGymsDao())
+        val gymsRepository = GymsRepository(TestGymsApiService(), TestGymsDao(), dispatcher)
         val getStoredGymsUseCase = GetSortedGymsUseCase(gymsRepository)
         val toggleFavouriteStateUseCase =
             ToggleFavouriteStateUseCase(gymsRepository, getStoredGymsUseCase)
