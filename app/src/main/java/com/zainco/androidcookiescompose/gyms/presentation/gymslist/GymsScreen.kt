@@ -36,10 +36,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zainco.androidcookiescompose.gyms.domain.Gym
+import com.zainco.androidcookiescompose.gyms.presentation.SemanticDescription
 import com.zainco.androidcookiescompose.ui.theme.Purple80
 
 @Composable
@@ -60,7 +62,9 @@ fun GymsScreen(
                 }
             }
         }
-        if (state.isLoading) CircularProgressIndicator()
+        if (state.isLoading) CircularProgressIndicator(Modifier.semantics {
+            this.contentDescription = SemanticDescription.GYMS_LIST_LOADING
+        })
         state.error?.let {
             Text(it)
         }
@@ -148,8 +152,10 @@ fun PreviewDropDown() {
         mutableStateOf("")
     }
 
-    Box(modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         ExposedDropdownMenuBox(
             expanded = isExpanded,
             onExpandedChange = { isExpanded = !isExpanded }) {
