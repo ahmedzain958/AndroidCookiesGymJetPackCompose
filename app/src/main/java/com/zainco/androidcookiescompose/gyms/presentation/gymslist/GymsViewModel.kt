@@ -7,9 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zainco.androidcookiescompose.gyms.data.di.MainDispatcher
 import com.zainco.androidcookiescompose.gyms.domain.usecases.GetInitialGymsUseCase
 import com.zainco.androidcookiescompose.gyms.domain.usecases.ToggleFavouriteStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class GymsViewModel @Inject constructor(
     private val getInitialGymsUseCase: GetInitialGymsUseCase,
     private val toggleFavouriteStateUseCase: ToggleFavouriteStateUseCase,
+    @MainDispatcher private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private var _state by mutableStateOf(GymScreenState(emptyList(), true))
     val state: State<GymScreenState>
@@ -34,7 +37,7 @@ class GymsViewModel @Inject constructor(
     }
 
     private fun getGyms() {
-        viewModelScope.launch(coroutineExceptionHandler) {
+        viewModelScope.launch(coroutineExceptionHandler + dispatcher) {
             val receivedGyms = getInitialGymsUseCase()
             _state = _state.copy(gymsList = receivedGyms, isLoading = false)
         }
@@ -42,7 +45,7 @@ class GymsViewModel @Inject constructor(
 
 
     fun toggleFavState(gymId: Int, oldValue: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler + dispatcher) {
             val updatedGymsList = toggleFavouriteStateUseCase(gymId, oldValue)
             _state = _state.copy(gymsList = updatedGymsList)
         }
