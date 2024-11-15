@@ -21,13 +21,8 @@ class GymsDetailsViewModel @Inject constructor(
     private val getGymsByIdUseCase: GetGymsByIdUseCase,
 ) : ViewModel() {
     val state = mutableStateOf<Gym?>(null)
-    private var apiService: GymsApiService
 
     init {
-        val retrofit: Retrofit =
-            Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://projectname-5ee14.firebaseio.com/").build()
-        apiService = retrofit.create(GymsApiService::class.java)
         val gymId = savedStateHandle.get<Int>("gym_id") ?: 0
         getGym(gymId)
     }
