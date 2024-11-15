@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,7 +15,6 @@ import androidx.navigation.navDeepLink
 import com.zainco.androidcookiescompose.gyms.presentation.details.GymDetailsScreen
 import com.zainco.androidcookiescompose.gyms.presentation.gymslist.GymsScreen
 import com.zainco.androidcookiescompose.gyms.presentation.gymslist.GymsViewModel
-import com.zainco.androidcookiescompose.gyms.presentation.gymslist.PreviewDropDown
 import com.zainco.androidcookiescompose.ui.theme.AndroidCookiesComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +37,6 @@ private fun GymsAroundApp() {
         composable(route = "gyms") {
             val vm: GymsViewModel = hiltViewModel()
             Column {
-                PreviewDropDown()
                 GymsScreen(vm.state.value, { id ->
                     navController.navigate("gyms/$id")
                 }, onFavouriteIconClick = { id: Int, oldValue: Boolean ->

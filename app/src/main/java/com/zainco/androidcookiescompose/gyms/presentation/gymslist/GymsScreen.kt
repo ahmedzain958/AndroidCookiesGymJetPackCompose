@@ -63,10 +63,17 @@ fun GymsScreen(
     onFavouriteIconClick: (Int, Boolean) -> Unit,
 ) {
     var query by remember { mutableStateOf("") } // Holds the search query
-    val filteredGyms = remember(state.gymsList, query) {
-        if (query.isBlank()) state.gymsList
-        else state.gymsList.filter { gym ->
-            gym.name.contains(query, ignoreCase = true)
+    var isFavourite by remember { mutableStateOf(CHOICE.ALL) } // Holds the search query
+    val filteredGyms = remember(state.gymsList, query, isFavourite) {
+        state.gymsList.filter { gym ->
+            // Apply the search query filter if `query` is not blank
+            (query.isBlank() || gym.name.startsWith(query, ignoreCase = true)) &&
+                    // Apply the favourite filter
+                    when (isFavourite) {
+                        CHOICE.ALL -> true
+                        CHOICE.IS_FAVOURITE -> gym.isFavorite
+                        CHOICE.NOT_FAVOURITE -> !gym.isFavorite
+                    }
         }
     }
 
@@ -80,6 +87,9 @@ fun GymsScreen(
             Text(it)
         }
         Column {
+            DropDown { choice: CHOICE ->
+                isFavourite = choice // Update the query on text change
+            }
             Spacer(modifier = Modifier.size(16.dp))
             SearchBar { updatedQuery ->
                 query = updatedQuery // Update the query on text change
@@ -98,6 +108,7 @@ fun GymsScreen(
     }
 
 }
+
 
 @Composable
 fun SearchBar(onTextChanged: (String) -> Unit) {
@@ -166,107 +177,6 @@ fun GymItem(
         }
     }
 }
-
-@Composable
-fun DefaultIcon(
-    icon: ImageVector,
-    modifier: Modifier,
-    contentDescription: String,
-    onClick: () -> Unit = {},
-) {
-    Image(
-        imageVector = icon,
-        contentDescription = contentDescription,
-        modifier = modifier
-            .padding(8.dp)
-            .clickable {
-                onClick()
-            },
-        colorFilter = ColorFilter.tint(Color.DarkGray),
-    )
-}
-
-@Composable
-fun GymDetails(
-    gym: Gym, modifier: Modifier,
-    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-) {
-    Column(modifier, horizontalAlignment = horizontalAlignment) {
-        Text(
-            text = gym.name, style = MaterialTheme.typography.titleSmall, color = Purple80
-        )
-        CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.secondaryContainer
-        ) {
-            Text(
-                text = gym.place, style = MaterialTheme.typography.bodySmall, color = DarkGray
-            )
-        }
-
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun PreviewDropDown() {
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
-    var gender by remember {
-        mutableStateOf("")
-    }
-
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        ExposedDropdownMenuBox(
-            expanded = isExpanded,
-            onExpandedChange = { isExpanded = !isExpanded }) {
-            TextField(
-                value = gender,
-                onValueChange = {
-                    gender = it
-                },
-                readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.menuAnchor()
-            )
-            ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = {}) {
-                DropdownMenuItem(text = {
-                    Text(text = "")
-                }, onClick = {
-                    gender = ""
-                    isExpanded = false
-                })
-                DropdownMenuItem(text = {
-                    Text(text = "Male")
-                }, onClick = {
-                    gender = "Male"
-                    isExpanded = false
-                })
-                DropdownMenuItem(text = {
-                    Text(text = "Female")
-                }, onClick = {
-                    gender = "Female"
-                    isExpanded = false
-                })
-                DropdownMenuItem(text = {
-                    Text(text = "Other")
-                }, onClick = {
-                    gender = "Other"
-                    isExpanded = false
-                })
-            }
-        }
-    }
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun ProfileHeader() {
@@ -309,3 +219,104 @@ fun ProfileHeader() {
         )
     }
 }
+
+@Composable
+fun DefaultIcon(
+    icon: ImageVector,
+    modifier: Modifier,
+    contentDescription: String,
+    onClick: () -> Unit = {},
+) {
+    Image(
+        imageVector = icon,
+        contentDescription = contentDescription,
+        modifier = modifier
+            .padding(8.dp)
+            .clickable {
+                onClick()
+            },
+        colorFilter = ColorFilter.tint(Color.DarkGray),
+    )
+}
+
+@Composable
+fun GymDetails(
+    gym: Gym, modifier: Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+) {
+    Column(modifier, horizontalAlignment = horizontalAlignment) {
+        Text(
+            text = gym.name, style = MaterialTheme.typography.titleSmall, color = Purple80
+        )
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Text(
+                text = gym.place, style = MaterialTheme.typography.bodySmall, color = DarkGray
+            )
+        }
+
+    }
+}
+
+enum class CHOICE(val value: String) {
+    IS_FAVOURITE("IsFavourite"),
+    NOT_FAVOURITE("NOT_FAVOURITE"),
+    ALL("")
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropDown(onDropDownItemSelected: (CHOICE) -> Unit) {
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
+    var choice by remember {
+        mutableStateOf(CHOICE.ALL.value)
+    }
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = isExpanded,
+            onExpandedChange = { isExpanded = !isExpanded }) {
+            TextField(
+                value = choice,
+                onValueChange = {
+                    choice = it
+                },
+                readOnly = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier.menuAnchor()
+            )
+            ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = {}) {
+                DropdownMenuItem(text = {
+                    Text(text = CHOICE.ALL.value)
+                }, onClick = {
+                    choice = CHOICE.ALL.value
+                    isExpanded = false
+                    onDropDownItemSelected(CHOICE.ALL)
+                })
+                DropdownMenuItem(text = {
+                    Text(text = "IsFavourite")
+                }, onClick = {
+                    choice = CHOICE.IS_FAVOURITE.value
+                    isExpanded = false
+                    onDropDownItemSelected(CHOICE.IS_FAVOURITE)
+                })
+                DropdownMenuItem(text = {
+                    Text(text = "NotIsFavourite")
+                }, onClick = {
+                    choice = CHOICE.NOT_FAVOURITE.value
+                    isExpanded = false
+                    onDropDownItemSelected(CHOICE.NOT_FAVOURITE)
+                })
+            }
+        }
+    }
+}
+
